@@ -198,7 +198,7 @@ function pp_wczc_page() {
 
 add_action('woocommerce_checkout_update_order_meta', 'pp_wczc_process_order');
 add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
-public function enviar_usuario_a_zoho($user_id) {
+function enviar_usuario_a_zoho($user_id) {
 	
     $usuario = get_user_meta( $user_id );
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
