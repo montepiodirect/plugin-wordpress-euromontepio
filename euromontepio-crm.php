@@ -8,7 +8,7 @@
  * License: GNU General Public License version 2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
  */
-/*QUE PASAAAA*/
+
 add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'pp_wczc_action_links');
 function pp_wczc_action_links($links) {
 	array_unshift($links, '<a href="'.esc_url(get_admin_url(null, 'admin.php?page=pp_wczc')).'">Ajustes</a>');
