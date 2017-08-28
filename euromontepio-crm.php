@@ -18,7 +18,7 @@ function pp_wczc_action_links($links) {
 
 add_action('admin_menu', 'pp_wczc_admin_menu');
 function pp_wczc_admin_menu() {
-	add_menu_page('Euromontepío - Integración CRM', 'Euromontepío - Integración CRM', 'manage_woocommerce', 'pp_wczc', 'pp_wczc_page', 6);
+	add_menu_page('Euromontepío - Integración CRM', 'Euromontepío - Integración CRM', 'manage_woocommerce', 'pp_wczc', 'pp_wczc_page', 1);
 }
 
 
@@ -198,7 +198,7 @@ function pp_wczc_page() {
 
 add_action('woocommerce_checkout_update_order_meta', 'pp_wczc_process_order');
 add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
-function enviar_usuario_a_zoho($user_id) {
+public function enviar_usuario_a_zoho($user_id) {
 	
     $usuario = get_user_meta( $user_id );
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
