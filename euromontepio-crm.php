@@ -1,9 +1,9 @@
 <?php
 /**
- * Plugin Name: Pruebas Alvaro
- * Plugin para hacer pruebas integrando Wordpress, Woocommerce y Zoho CRM
- * Version: 1.0.6
- * Author: Alvaro
+ * Plugin Name: Euromontepio CRM
+ * Plugin para integrar Wordpress, Woocommerce y Zoho CRM
+ * Version: 1.1.1.
+ * Author: Euromontepio
  * Author URI: http://www.euromontepio.com
  * License: GNU General Public License version 2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
