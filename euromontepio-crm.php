@@ -1,175 +1,24 @@
 <?php
 /**
  * Plugin Name: Euromontepio CRM
- * Plugin para integrar Wordpress, Woocommerce y Zoho CRM
- * Version: 1.1.1.
+ * Description: Plugin para hacer pruebas integrando Wordpress, Woocommerce y Zoho CRM
+ * Version: 1.0
  * Author: Euromontepio
  * Author URI: http://www.euromontepio.com
  * License: GNU General Public License version 2 or later
  * License URI: http://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
  */
 
-
-// Función para enviar el contacto como Lead a Zoho CRM
-function enviar_usuario_a_zoho($leadData, $updateExisting=false) { 
-		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
-		return !isset($result->error);
-	};
-
-         
-// Añadimos la acción
-add_action( 'register_new_user', 'enviar_usuario_a_zoho', 10, 1 ); 
- 
- 
-// Conexión a la API de Zoho
-class PP_Zoho_API {
-	
-	private static $apiUrl = 'https://crm.zoho.com/crm/private/xml/';
-	private static $apiTokenUrl = 'https://accounts.zoho.com/apiauthtoken/nb/create';
-	private $authToken;
-	
-	function __construct($authToken) {
-		$this->authToken = $authToken;
-	}
-	
-	private function doApiRequest($module, $method, $params=array()) {
-		$params['authtoken'] = $this->authToken;
-		$params['scope'] = 'crmapi';
-		$requestUrl = PP_Zoho_API::$apiUrl.$module.'/'.$method;
-		$context = stream_context_create(array(
-			'http' => array(
-				'method' => 'POST',
-				'content' => http_build_query($params),
-				'header' => 'Content-Type: application/x-www-form-urlencoded'
-			)
-		));
-		$result = file_get_contents($requestUrl, false, $context);
-		if ($result === false)
-			return false;
-		$result = simplexml_load_string($result);
-		if ($result === false)
-			return false;
-		return $result;
-	}
-	
-	private function fieldsToXml($module, $rows) {
-		$xml = new SimpleXMLElement("<$module />");
-		foreach ($rows as $i => $fields) {
-			$row = $xml->addChild('row');
-			$row->addAttribute('no', $i + 1);
-			
-			foreach ($fields as $fieldName => $fieldValue) {
-				$field = $row->addChild('FL', str_replace('&', '&amp;', $fieldValue));
-				$field->addAttribute('val', $fieldName);
-			}
-		}
-		return $xml->asXML();
-	}
-	
-	public static function getApiToken($email, $password) {
-		$context = stream_context_create(array(
-			'http' => array(
-				'method' => 'POST',
-				'content' => http_build_query(array(
-					'SCOPE' => 'ZohoCRM/crmapi',
-					'EMAIL_ID' => $email,
-					'PASSWORD' => $password,
-					'DISPLAY_NAME' => 'WooCommerce - '.substr($_SERVER['HTTP_HOST'], 0, 25)
-				)),
-				'header' => 'Content-Type: application/x-www-form-urlencoded'
-			)
-		));
-		$result = file_get_contents(PP_Zoho_API::$apiTokenUrl, false, $context);
-		if ($result === false)
-			return false;
-		foreach(explode("\n", $result) as $line) {
-			$line = trim($line);
-			if (strlen($line) > 10 && substr($line, 0, 10) == 'AUTHTOKEN=')
-				return substr($line, 10);
-		}
-		return false;
-	}
-	
-	public function addContact($contactData, $updateExisting=false) {
-		$result = $this->doApiRequest('Contacts', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Contacts', array($contactData))));
-		return !isset($result->error);
-	}
-	
-	public function addLead($leadData, $updateExisting=false) {
-		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
-		return !isset($result->error);
-	}
-}
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'pp_wczc_action_links');
+add_filter('plugin_action_links_'.plugin_basename(__FILE__), 'pp_wczc_action_links');
 function pp_wczc_action_links($links) {
-	array_unshift($links, '<a href="'.esc_url(get_admin_url(null, 'admin.php?page=pp_wczc')).'">Settings</a>');
+	array_unshift($links, '<a href="'.esc_url(get_admin_url(null, 'admin.php?page=pp_wczc')).'">Ajustes</a>');
 	return $links;
 }
  
 
 add_action('admin_menu', 'pp_wczc_admin_menu');
 function pp_wczc_admin_menu() {
-	add_submenu_page('woocommerce', 'Zoho CRM Integration', 'Zoho CRM Integration', 'manage_woocommerce', 'pp_wczc', 'pp_wczc_page');
+	add_menu_page('Euromontepío - Integración CRM', 'Euromontepío - Integración CRM', 'manage_woocommerce', 'pp_wczc', 'pp_wczc_page', 6);
 }
 
 
@@ -178,15 +27,15 @@ function pp_wczc_page() {
 	// Print header
 	echo('
 		<div class="wrap">
-			<h2>Connector for WooCommerce and Zoho CRM</h2>
+			<h2>Conector personalizado para WordPress, WooCommerce y Zoho CRM</h2>
 	');
 	
 	// Check for WooCommerce
 	if (!class_exists('WooCommerce')) {
-		echo('<div class="error"><p>This plugin requires that WooCommerce is installed and activated.</p></div></div>');
+		echo('<div class="error"><p>Este plugin necesita que WooCommerce esté instalado y activo.</p></div></div>');
 		return;
 	} else if (!function_exists('wc_get_order_types')) {
-		echo('<div class="error"><p>This plugin requires WooCommerce 2.2 or higher. Please update your WooCommerce install.</p></div></div>');
+		echo('<div class="error"><p>Este plugin requiere WooCommerce 2.2 o superior. Por favor, actualiza la versión de WooCommerce.</p></div></div>');
 		return;
 	}
 	
@@ -196,11 +45,11 @@ function pp_wczc_page() {
 			require_once(__DIR__.'/PP_Zoho_API.class.php');
 		$apiToken = PP_Zoho_API::getApiToken($_POST['pp_wczc_zoho_email'], $_POST['pp_wczc_zoho_password']);
 		if (empty($apiToken)) {
-			echo('<div class="error"><p>An error occurred while attempting to connect your Zoho CRM account. Please ensure that your email/username and password is correct.</p></div>');
+			echo('<div class="error"><p>Ha ocurrido un error intentando conectar con tu cuenta de CRM. Asegúrate de que el usuario/email y la contraseña son correctos.</p></div>');
 		} else {
 			update_option('pp_wczc_zoho_api_token', $apiToken);
 			update_option('pp_wczc_zoho_email', $_POST['pp_wczc_zoho_email']);
-			echo('<div class="updated"><p>Your Zoho CRM account was connected successfully.</p></div>');
+			echo('<div class="updated"><p>Tu cuenta de Zoho ya está conectada correctamente.</p></div>');
 		}
 	} else {
 		
@@ -210,7 +59,7 @@ function pp_wczc_page() {
 		}
 		
 		if (get_option('pp_wczc_zoho_api_token', false) === false) {
-			echo('<div class="error"><p>You haven\'t connected your Zoho CRM account yet.</p></div>');
+			echo('<div class="error"><p>Todavía no hay conexión a la cuenta de CRM.</p></div>');
 		}
 	}
 	
@@ -220,6 +69,7 @@ function pp_wczc_page() {
 		update_option('pp_wczc_update_contacts', empty($_POST['pp_wczc_update_contacts']) ? 0 : 1);
 		update_option('pp_wczc_contacts_lead_source', empty($_POST['pp_wczc_contacts_lead_source']) ? 0 : 1);
 		update_option('pp_wczc_add_leads', empty($_POST['pp_wczc_add_leads']) ? 0 : 1);
+		update_option('em_wp_zc', empty($_POST['em_wp_zc']) ? 0 : 1);
 		update_option('pp_wczc_update_leads', empty($_POST['pp_wczc_update_leads']) ? 0 : 1);
 		update_option('pp_wczc_leads_lead_source', empty($_POST['pp_wczc_leads_lead_source']) ? 0 : 1);
 		echo('<div class="updated"><p>Your settings have been saved.</p></div>');
@@ -234,53 +84,47 @@ function pp_wczc_page() {
 		<table class="form-table">
 			<tr valign="top">
 				<th scope="row">
-					<label>Connection:</label>
+					<label>Conexión:</label>
 				</th>
 				<td>');
 	if (get_option('pp_wczc_zoho_api_token', false) !== false)
-		echo('		<p style="margin-bottom: 10px;">You have already connected your Zoho CRM account. To connect a different account, enter your login details below.</p>
+		echo('		<p style="margin-bottom: 10px;">Ya estás conectado a tu cuenta de CRM. Para cambiar de cuenta, introduce los datos aquí abajo.</p>
 					<div style="margin-bottom: 10px;">
-						<label><input type="checkbox" name="pp_wczc_zoho_disconnect" value="1" /> Disconnect Zoho CRM account</label>
+						<label><input type="checkbox" name="pp_wczc_zoho_disconnect" value="1" /> Desconectar de la cuenta de CRM</label>
 					</div>
 		');
 	echo('			<div style="margin-bottom: 10px;">
-						<label style="display: inline-block; width: 160px;">Zoho Email/Username:</label>
+						<label style="display: inline-block; width: 160px;">Email/usuario de Zoho:</label>
 						<input type="text" name="pp_wczc_zoho_email" value="'.htmlspecialchars(get_option('pp_wczc_zoho_email')).'" />
 					</div>
 					<div>
-						<label style="display: inline-block; width: 160px;">Zoho Password:</label>
+						<label style="display: inline-block; width: 160px;">Contraseña de Zoho:</label>
 						<input type="password" name="pp_wczc_zoho_password" />
-						<p class="description">Your password will be used to establish the connection to your Zoho CRM account and will not be stored.</p>
+						<p class="description">La contraseña es solo para establecer la conexión, no se queda guardada.</p>
 					</div>
 				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row">
-					<label>Contacts:</label>
+					<label>Contactos:</label>
 				</th>
 				<td>
 					<div style="margin-bottom: 5px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_add_contacts" name="pp_wczc_add_contacts"'.(get_option('pp_wczc_add_contacts', 1) ? ' checked="checked"' : '').' />
-							Add new WooCommerce customers as Zoho CRM contacts
+							Añadir nuevos usuarios de WooCommerce como "Contactos" en el CRM
 						</label>
 					</div>
 					<div style="margin-bottom: 5px; margin-left: 20px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_update_contacts" name="pp_wczc_update_contacts"'.(get_option('pp_wczc_update_contacts', 0) ? ' checked="checked"' : '').' />
-							If a contact already exists for the customer, update it
+							Si ya existe Contacto para el usuario, actualizarlo
 						</label>
 					</div>
 					<div style="margin-bottom: 5px; margin-left: 20px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_contacts_lead_source" name="pp_wczc_contacts_lead_source"'.(get_option('pp_wczc_contacts_lead_source', 0) ? ' checked="checked"' : '').' />
-							Set Lead Source field (will overwrite existing value)
-						</label>
-					</div>
-					<div style="margin-left: 20px;">
-						<label>
-							<input type="checkbox" disabled="disabled" />
-							Add a note to the contact with order details (names and quantities of products ordered) <sup style="color: #f00;">PRO</sup>
+							Establecer fuente de posible cliente (sobreescribirá el valor actual)
 						</label>
 					</div>
 				</td>
@@ -293,70 +137,40 @@ function pp_wczc_page() {
 					<div style="margin-bottom: 5px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_add_leads" name="pp_wczc_add_leads"'.(get_option('pp_wczc_add_leads', 0) ? ' checked="checked"' : '').' />
-							Add new WooCommerce customers as Zoho CRM leads
+							Añadir nuevos usuarios de WooCommerce como Leads
 						</label>
 					</div>
 					<div style="margin-bottom: 5px; margin-left: 20px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_update_leads" name="pp_wczc_update_leads"'.(get_option('pp_wczc_update_leads', 0) ? ' checked="checked"' : '').' />
-							If a lead already exists for the customer, update it
+							Si ya existe Lead para el usuario, actualizarlo
 						</label>
 					</div>
 					<div style="margin-bottom: 5px; margin-left: 20px;">
 						<label>
 							<input type="checkbox" id="pp_wczc_leads_lead_source" name="pp_wczc_leads_lead_source"'.(get_option('pp_wczc_leads_lead_source', 0) ? ' checked="checked"' : '').' />
-							Set Lead Source field (will overwrite existing value)
-						</label>
-					</div>
-					<div style="margin-left: 20px;">
-						<label>
-							<input type="checkbox" disabled="disabled" />
-							Add a note to the lead with order details (names and quantities of products ordered) <sup style="color: #f00;">PRO</sup>
+							Establecer fuente de Lead (sobreescribirá el valor actual)
 						</label>
 					</div>
 				</td>
 			</tr>
 			<tr valign="top">
 				<th scope="row">
-					<label>Potentials:</label>
+					<label>Usuarios de Wordpress:</label>
 				</th>
 				<td>
-					<div>
+					<div style="margin-bottom: 5px;">
 						<label>
-							<input type="checkbox" disabled="disabled" />
-							Create a potential for the order <sup style="color: #f00;">PRO</sup>
+							<input type="checkbox" id="em_wp_zc" name="em_wp_zc"'.(get_option('em_wp_zc', 0) ? ' checked="checked"' : '').' />
+							Añadir nuevos usuarios de WordPress como Leads
 						</label>
-						<p class="description">If the option to add the customer as a contact is enabled, the potential will be associated with that contact.<br />The account name will be the billing company (if specified) or the billing name.</p>
 					</div>
 				</td>
 			</tr>
 		</table>
-		<button type="submit" class="button-primary">Save Settings</button>
+		<button type="submit" class="button-primary">Guardar ajustes</button>
 		</form>
-		</div> <!-- /post-body-content -->
-			
-		<div id="postbox-container-1" class="postbox-container">
-			<div id="side-sortables" class="meta-box-sortables">
-			
-				<div class="postbox">
-					<h2><a href="https://potentplugins.com/downloads/woocommerce-zoho-crm-connector-pro-plugin/?utm_source=connector-for-woocommerce-and-zoho-crm&amp;utm_medium=link&amp;utm_campaign=wp-plugin-upgrade-link" target="_blank">Upgrade to Pro</a></h2>
-					<div class="inside">
-						<p><strong>Upgrade to <a href="https://potentplugins.com/downloads/woocommerce-zoho-crm-connector-pro-plugin/?utm_source=connector-for-woocommerce-and-zoho-crm&amp;utm_medium=link&amp;utm_campaign=wp-plugin-upgrade-link" target="_blank">WooCommerce and Zoho CRM Connector Pro</a> for the following additional features:</strong></p>
-						<ul style="list-style-type: disc; padding-left: 1.5em;">
-<li>Add order details (product names and quantities) as a note to the contact and/or lead corresponding to the customer.</li>
-<li>Create a potential based on the order and linked to the customer’s contact record (if one was found or created).</li>
-<li>Manually send individual orders to Zoho CRM from the Order Actions menu on the Edit Order page.</li>
-<li>Manually send orders to Zoho CRM individually or in bulk from the order list.</li>
-						</ul>
-						<p>
-							<a href="https://potentplugins.com/downloads/woocommerce-zoho-crm-connector-pro-plugin/?utm_source=connector-for-woocommerce-and-zoho-crm&amp;utm_medium=link&amp;utm_campaign=wp-plugin-upgrade-link" target="_blank">Buy Now &gt;</a>
-						</p>
-					</div>
-				</div>
-				
-			</div> <!-- /side-sortables-->
-		</div><!-- /postbox-container-1 -->
-		
+		</div> <!-- /post-body-content -->		
 		</div> <!-- /post-body -->
 		<br class="clear" />
 		</div> <!-- /poststuff -->
@@ -379,12 +193,42 @@ function pp_wczc_page() {
 			jQuery(\'#pp_wczc_add_leads\').change();
 		</script>
 	');
-	$potent_slug = 'connector-for-woocommerce-and-zoho-crm';
-	include(__DIR__.'/plugin-credit.php');
 	echo('</div>'); // /wrap
 }
 
 add_action('woocommerce_checkout_update_order_meta', 'pp_wczc_process_order');
+add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
+function enviar_usuario_a_zoho($user_id) {
+	
+    $usuario = get_user_meta( $user_id );
+	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
+	echo '<script language="javascript">alert("0");</script>'; 
+	if (empty($zohoApiToken))
+		return;
+	echo '<script language="javascript">alert("1");</script>'; 
+	if (empty($usuario))
+		return;
+	echo '<script language="javascript">alert("2");</script>'; 
+	if (!class_exists('PP_Zoho_API'))
+		require_once(__DIR__.'/PP_Zoho_API.class.php');
+	$zoho = new PP_Zoho_API($zohoApiToken);
+	
+	if (get_option('em_wp_zc', 1)) {
+		echo '<script language="javascript">alert("3");</script>'; 
+		$updateLeads = get_option('em_wp_zc', 0);
+	 $leadData = array(
+			'First Name' => $usuario->user_firstname,
+			'Last Name' => $usuario->user_lastname,
+			'Email' => $usuario->user_email,
+		);
+		if (get_option('pp_wczc_contacts_lead_source', 0))
+			$contactData['Lead Source'] = 'Tienda Online';
+		$zoho->addLead($leadData, !empty($updateLeads));
+		echo '<script language="javascript">alert("4");</script>'; 
+	}
+}
+
+
 function pp_wczc_process_order($orderId) {
 	global $woocommerce;
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
@@ -397,8 +241,7 @@ function pp_wczc_process_order($orderId) {
 	
 	if (!class_exists('PP_Zoho_API'))
 		require_once(__DIR__.'/PP_Zoho_API.class.php');
-	$zoho = new PP_Zoho_API($zohoApiToken);
-	
+	$zoho = new PP_Zoho_API($zohoApiToken);	
 	if (get_option('pp_wczc_add_contacts', 1)) {
 		$updateContacts = get_option('pp_wczc_update_contacts', 0);
 		$contactData = array(
@@ -413,7 +256,7 @@ function pp_wczc_process_order($orderId) {
 			'Mailing Country' => $order->billing_country
 		);
 		if (get_option('pp_wczc_contacts_lead_source', 0))
-			$contactData['Lead Source'] = 'OnlineStore';
+			$contactData['Lead Source'] = 'Tienda Online';
 		$zoho->addContact($contactData, !empty($updateContacts));
 	}
 	
