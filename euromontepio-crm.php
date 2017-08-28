@@ -11,7 +11,7 @@
 
 
 // Función para enviar el contacto como Lead a Zoho CRM
-public function enviar_usuario_a_zoho($leadData, $updateExisting=false) { 
+function enviar_usuario_a_zoho($leadData, $updateExisting=false) { 
 		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
 		return !isset($result->error);
 	};
