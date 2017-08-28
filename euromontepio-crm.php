@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Euromontepio CRM
  * Description: Plugin para hacer pruebas integrando Wordpress, Woocommerce y Zoho CRM
- * Version: 1.0
+ * Version: 1.2
  * Author: Euromontepio
  * Author URI: http://www.euromontepio.com
  * License: GNU General Public License version 2 or later
