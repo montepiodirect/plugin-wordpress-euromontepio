@@ -199,22 +199,16 @@ function pp_wczc_page() {
 add_action('woocommerce_checkout_update_order_meta', 'pp_wczc_process_order');
 add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
 function enviar_usuario_a_zoho($user_id) {
-	
-    $usuario = get_user_meta( $user_id );
+    $usuario = get_userdata( $user_id );
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
-	echo '<script language="javascript">alert("0");</script>'; 
 	if (empty($zohoApiToken))
 		return;
-	echo '<script language="javascript">alert("1");</script>'; 
 	if (empty($usuario))
 		return;
-	echo '<script language="javascript">alert("2");</script>'; 
 	if (!class_exists('PP_Zoho_API'))
 		require_once(__DIR__.'/PP_Zoho_API.class.php');
-	$zoho = new PP_Zoho_API($zohoApiToken);
-	
+	$zoho = new PP_Zoho_API($zohoApiToken);	
 	if (get_option('em_wp_zc', 1)) {
-		echo '<script language="javascript">alert("3");</script>'; 
 		$updateLeads = get_option('em_wp_zc', 0);
 	 $leadData = array(
 			'First Name' => $usuario->user_firstname,
@@ -224,7 +218,6 @@ function enviar_usuario_a_zoho($user_id) {
 		if (get_option('pp_wczc_contacts_lead_source', 0))
 			$contactData['Lead Source'] = 'Tienda Online';
 		$zoho->addLead($leadData, !empty($updateLeads));
-		echo '<script language="javascript">alert("4");</script>'; 
 	}
 }
 
