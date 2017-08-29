@@ -214,9 +214,10 @@ function enviar_usuario_a_zoho($user_id) {
 			'First Name' => $usuario->user_firstname,
 			'Last Name' => $usuario->user_lastname,
 			'Email' => $usuario->user_email,
+			'Lead Source' => 'Registro Wordpress',
 		);
-		if (get_option('pp_wczc_contacts_lead_source', 0))
-			$contactData['Lead Source'] = 'Tienda Online';
+		//if (get_option('pp_wczc_contacts_lead_source', 0))
+		//	$contactData['Lead Source'] = 'Tienda Online';
 		$zoho->addLead($leadData, !empty($updateLeads));
 	}
 }
