@@ -81,5 +81,16 @@ class PP_Zoho_API {
 		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
 		return !isset($result->error);
 	}
+	
+	public function convertLead($leadData, $updateExisting=false) {
+		$result = $this->doApiRequest('Leads', 'convertLead', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
+		return !isset($result->error);
+	}
+	public function searchLead($criteria) {
+		$select = 'Leads(LEADID)'
+		$result = $this->doApiRequest('Leads', 'searchRecords',$criteria);
+		return !isset($result->error);
+	}
+	
 }
 ?>

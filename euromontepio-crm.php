@@ -165,6 +165,18 @@ function pp_wczc_page() {
 							Añadir nuevos usuarios de WordPress como Leads
 						</label>
 					</div>
+					<div style="margin-bottom: 5px;">
+						<label>
+							<input type="checkbox" id="em_cl_zc" name="em_cl_zc"'.(get_option('em_cl_zc', 0) ? ' checked="checked"' : '').' />
+							Convertir Leads en Contactos al realizar pedidos en WooCommerce
+						</label>
+					</div>
+					<div style="margin-bottom: 5px;">
+						<label>
+							<input type="checkbox" id="em_clq_zc" name="em_clq_zc"'.(get_option('em_clq_zc', 0) ? ' checked="checked"' : '').' />
+							Si ya existe Contacto para ese Lead, actualizarlo en lugar de crear otro
+						</label>
+					</div>
 				</td>
 			</tr>
 		</table>
@@ -222,6 +234,33 @@ function enviar_usuario_a_zoho($user_id) {
 	}
 }
 
+function buscar_lead_id($user_id) {
+	$usuario = get_userdata($user_id);
+	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
+	if (empty($zohoApiToken))
+		return;
+	if (empty($usuario))
+		return;
+	if (!class_exists('PP_Zoho_API'))
+		require_once(__DIR__.'/PP_Zoho_API.class.php');
+	$zoho = new PP_Zoho_API($zohoApiToken);	
+	$criteria = '(Email:'.$usuario->user_email.'';
+	$zoho->searchLead($criteria);
+
+function convertir_lead_a_contacto($user_id) {
+	$usuario = get_userdata($user_id);
+	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
+	if (empty($zohoApiToken))
+		return;
+	if (empty($usuario))
+		return;
+	if (!class_exists('PP_Zoho_API'))
+		require_once(__DIR__.'/PP_Zoho_API.class.php');
+	$zoho = new PP_Zoho_API($zohoApiToken);	
+	$updateContacts = get_option('em_clq_zc', 0);
+	
+	
+	$zoho->convertLead($leadData, !empty($updateContacts));
 
 function pp_wczc_process_order($orderId) {
 	global $woocommerce;
