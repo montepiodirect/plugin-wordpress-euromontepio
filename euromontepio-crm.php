@@ -72,6 +72,7 @@ function pp_wczc_page() {
 		update_option('em_wp_zc', empty($_POST['em_wp_zc']) ? 0 : 1);
 		update_option('pp_wczc_update_leads', empty($_POST['pp_wczc_update_leads']) ? 0 : 1);
 		update_option('pp_wczc_leads_lead_source', empty($_POST['pp_wczc_leads_lead_source']) ? 0 : 1);
+		update_option('em_lac_zc', empty($_POST['em_lac_zc']) ? 0 : 1);
 		echo('<div class="updated"><p>Your settings have been saved.</p></div>');
 	}
 	
