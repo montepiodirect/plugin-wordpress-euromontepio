@@ -167,18 +167,6 @@ function pp_wczc_page() {
 					</div>
 					<div style="margin-bottom: 5px;">
 						<label>
-							<input type="checkbox" id="em_cl_zc" name="em_cl_zc"'.(get_option('em_cl_zc', 0) ? ' checked="checked"' : '').' />
-							Convertir Leads en Contactos al realizar pedidos en WooCommerce
-						</label>
-					</div>
-					<div style="margin-bottom: 5px;">
-						<label>
-							<input type="checkbox" id="em_clq_zc" name="em_clq_zc"'.(get_option('em_clq_zc', 0) ? ' checked="checked"' : '').' />
-							Si ya existe Contacto para ese Lead, actualizarlo en lugar de crear otro
-						</label>
-					</div>
-					<div style="margin-bottom: 5px;">
-						<label>
 							<input type="checkbox" id="em_lac_zc" name="em_lac_zc"'.(get_option('em_lac_zc', 0) ? ' checked="checked"' : '').' />
 							Convertir Lead en Contacto al realizar una compra
 						</label>
