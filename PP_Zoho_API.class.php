@@ -84,8 +84,8 @@ class PP_Zoho_API {
 		return $xml->asXML();
 	}
 	
-	private function fieldsToXml2($module) {
-		$xml = new SimpleXMLElement("<$module />");
+	private function fieldsToXml2() {
+		$xml = new SimpleXMLElement("<Potentials />");
 			$row = $xml->addChild('row');
 			$row->addAttribute('no', 1);
 			$field = $row->addChild('option', 'false');
@@ -134,7 +134,7 @@ class PP_Zoho_API {
 	}
 	
 	public function convertLead($leadid) {
-		$result = $this->doApiRequest('Leads', 'convertLead', array('leadId' => $leadid, 'xmlData' => $this->fieldsToXml2('Potentials')));
+		$result = $this->doApiRequest('Leads', 'convertLead', array('leadId' => $leadid, 'xmlData' => $this->fieldsToXml2());
 		return $result;
 	}
 	public function searchLead($criteria) {
