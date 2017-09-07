@@ -230,12 +230,14 @@ function enviar_usuario_a_zoho($user_id) {
 	}
 }
 
-function convertir_lead_a_contacto($user_id) {
+function convertir_lead_a_contacto($orderId) {
+	global $woocommerce;
+	$order = $woocommerce->order_factory->get_order($orderId);
+	$email = $order->billing_email;
 	if (get_option('em_lac_zc') == 1){
-	$usuario = get_userdata($user_id);
 	if (!class_exists('PP_Zoho_API'))
 	require_once(__DIR__.'/PP_Zoho_API.class.php');
-	$hayid = buscar_lead_id($usuario->user_email);
+	$hayid = buscar_lead_id($email);
 	if(isset($hayid)){
 		$zoho->convertLead($hayid);
 	}
