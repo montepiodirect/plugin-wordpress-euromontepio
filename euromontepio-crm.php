@@ -238,9 +238,9 @@ function convertir_lead_a_contacto($user_id) {
 	require_once(__DIR__.'/PP_Zoho_API.class.php');
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
 	$zoho = new PP_Zoho_API($zohoApiToken);
+			die('fallo');
 	$hayid = buscar_lead_id($email);
 	if($hayid != null){
-		die('fallo');
 		$zoho->convertLead($hayid);
 	}
 	}
