@@ -204,8 +204,8 @@ function pp_wczc_page() {
 }
 
 add_action('woocommerce_checkout_update_order_meta', 'convertir_lead_a_contacto', 10, 1);
-//add_action('woocommerce_order_status_completed', 'convertir_lead_a_contacto');
-add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
+add_action('woocommerce_order_status_completed', 'convertir_lead_a_contacto');
+//add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
 function enviar_usuario_a_zoho($user_id) {
     $usuario = get_userdata( $user_id );
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
