@@ -134,7 +134,7 @@ class PP_Zoho_API {
 	}
 	
 	public function convertLead($leadid) {
-		$result = $this->doApiRequest('Leads', 'convertLead', array('leadId' => $leadid, 'xmlData' => $this->fieldsToXml2());
+		$result = $this->doApiRequest('Leads', 'convertLead', array('leadId' => $leadid, 'xmlData' => $this->fieldsToXml2()));
 		return $result;
 	}
 	public function searchLead($criteria) {
