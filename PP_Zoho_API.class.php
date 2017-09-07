@@ -15,7 +15,6 @@ class PP_Zoho_API {
 	}
 	
 	private function doApiRequest($module, $method, $params=array()) {
-		echo '<script type="text/javascript">alert("doApiRequest");</script>';
 		$params['authtoken'] = $this->authToken;
 		$params['scope'] = 'crmapi';
 		$requestUrl = PP_Zoho_API::$apiUrl.$module.'/'.$method;
@@ -72,7 +71,6 @@ class PP_Zoho_API {
 	}
 	
 	private function fieldsToXml($module, $rows) {
-		echo '<script type="text/javascript">alert("fieldsToXml");</script>';
 		$xml = new SimpleXMLElement("<$module />");
 		foreach ($rows as $i => $fields) {
 			$row = $xml->addChild('row');
@@ -131,7 +129,6 @@ class PP_Zoho_API {
 	}
 	
 	public function addLead($leadData, $updateExisting=false) {
-		echo '<script type="text/javascript">alert("addLead");</script>';
 		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
 		return !isset($result->error);
 	}
