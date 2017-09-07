@@ -88,14 +88,14 @@ class PP_Zoho_API {
 		$xml = new SimpleXMLElement("<$module />");
 			$row = $xml->addChild('row');
 			$row->addAttribute('no', 1);
-			$field1 = $row->addChild('option', 'false');
-			$field1->addAttribute('val', 'createPotential');
-			$field2 = $row->addChild('option', 'projectmanager@montepiodirect.com');
-			$field2->addAttribute('val', 'assignTo');
-			$field3 = $row->addChild('option', 'true');
-			$field3->addAttribute('val', 'notifyLeadOwner');
-			$field4 = $row->addChild('option', 'true');
-			$field4->addAttribute('val', 'notifyNewEntityOwner');
+			$field = $row->addChild('option', 'false');
+			$field->addAttribute('val', 'createPotential');
+			$field = $row->addChild('option', 'projectmanager@montepiodirect.com');
+			$field->addAttribute('val', 'assignTo');
+			$field = $row->addChild('option', 'true');
+			$field->addAttribute('val', 'notifyLeadOwner');
+			$field = $row->addChild('option', 'true');
+			$field->addAttribute('val', 'notifyNewEntityOwner');
 		return $xml->asXML();
 	}
 	
