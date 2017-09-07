@@ -246,8 +246,8 @@ function convertir_lead_a_contacto($user_id) {
 }
 
 function buscar_lead_id($email) {
-//	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
-//	$zoho = new PP_Zoho_API($zohoApiToken);	
+	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
+	$zoho = new PP_Zoho_API($zohoApiToken);	
 	$params = array();
 	$params['criteria'] = '(Email:'.$email.')';
 	$result = $zoho->doApiSearchRequest2($params);
