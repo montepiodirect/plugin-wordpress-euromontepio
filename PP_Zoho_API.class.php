@@ -130,7 +130,7 @@ class PP_Zoho_API {
 	
 	public function addLead($leadData, $updateExisting=false) {
 		$result = $this->doApiRequest('Leads', 'insertRecords', array('newFormat' => 1, 'duplicateCheck' => ($updateExisting ? 2 : 1), 'xmlData' => $this->fieldsToXml('Leads', array($leadData))));
-		return !isset($result->error);
+		return $result;
 	}
 	
 	public function convertLead($leadid) {
