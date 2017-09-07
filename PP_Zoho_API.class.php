@@ -87,7 +87,7 @@ class PP_Zoho_API {
 	private function fieldsToXml2($module) {
 		$xml = new SimpleXMLElement("<$module />");
 			$row = $xml->addChild('row');
-			$row->addAttribute('no', $i + 1);
+			$row->addAttribute('no', 1);
 			$field1 = $row->addChild('option', 'false');
 			$field1->addAttribute('val', 'createPotential');
 			$field2 = $row->addChild('option', 'projectmanager@montepiodirect.com');
