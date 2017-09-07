@@ -245,7 +245,7 @@ function convertir_lead_a_contacto($orderId) {
 }
 
 function buscar_lead_id($email) {
-	$zohoApiToken = $this->authToken;
+	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
 	if (!class_exists('PP_Zoho_API'))
 		require_once(__DIR__.'/PP_Zoho_API.class.php');
 	$zoho = new PP_Zoho_API($zohoApiToken);	
