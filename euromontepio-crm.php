@@ -238,7 +238,7 @@ function convertir_lead_a_contacto($orderId) {
 	if (!class_exists('PP_Zoho_API'))
 	require_once(__DIR__.'/PP_Zoho_API.class.php');
 	$hayid = buscar_lead_id($email);
-	if(isset($hayid)){
+	if($hayid != null){
 		$zoho->convertLead($hayid);
 	}
 	}
@@ -246,12 +246,10 @@ function convertir_lead_a_contacto($orderId) {
 
 function buscar_lead_id($email) {
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
-	if (!class_exists('PP_Zoho_API'))
-		require_once(__DIR__.'/PP_Zoho_API.class.php');
 	$zoho = new PP_Zoho_API($zohoApiToken);	
 	$params = array();
 	$params['criteria'] = '(Email:'.$email.')';
-	$result = $zoho->searchLead($params);
+	$result = $zoho->doApiSearchRequest2($params);
     $xml = simplexml_load_string($result);
 	if($xml->nodata->code == 4422){
 		$leadid = null;
