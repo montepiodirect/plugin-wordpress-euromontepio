@@ -246,8 +246,8 @@ function convertir_lead_a_contacto($user_id) {
 }
 
 function buscar_lead_id($email) {
-	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
-	$zoho = new PP_Zoho_API($zohoApiToken);	
+//	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
+//	$zoho = new PP_Zoho_API($zohoApiToken);	
 	$params = array();
 	$params['criteria'] = '(Email:'.$email.')';
 	$result = $zoho->doApiSearchRequest2($params);
@@ -255,7 +255,7 @@ function buscar_lead_id($email) {
 	if($xml->nodata->code == 4422){
 		$leadid = null;
 	}else{
-	$leadid = $xml->result->Leads->row[0]->FL; 
+	$leadid = $xml->result->Leads->row[0]->FL->__toString(); 
 	}
 	return $leadid;
 }
