@@ -240,6 +240,7 @@ function convertir_lead_a_contacto($user_id) {
 	$zoho = new PP_Zoho_API($zohoApiToken);
 	$hayid = buscar_lead_id($email);
 	if($hayid != null){
+		die('fallo');
 		$zoho->convertLead($hayid);
 	}
 	}
