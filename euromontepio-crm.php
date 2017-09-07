@@ -204,12 +204,7 @@ function pp_wczc_page() {
 }
 
 add_action('woocommerce_checkout_update_order_meta', 'pp_wczc_process_order');
-$hook_to = 'woocommerce_thankyou';
-$what_to_hook = 'convertir_lead_a_contacto';
-$prioriy = 111;
-$num_of_arg = 1;    
-add_action($hook_to, $what_to_hook, $prioriy, $num_of_arg);
-//add_action('woocommerce_checkout_update_order_meta', 'convertir_lead_a_contacto');
+add_action('woocommerce_order_status_completed', 'convertir_lead_a_contacto');
 add_action('user_register', 'enviar_usuario_a_zoho', 10, 1); 
 function enviar_usuario_a_zoho($user_id) {
     $usuario = get_userdata( $user_id );
