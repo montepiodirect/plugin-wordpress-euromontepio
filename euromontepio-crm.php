@@ -289,7 +289,7 @@ function pp_wczc_process_order($orderId) {
 		if (get_option('pp_wczc_contacts_lead_source', 0))
 			$contactData['Lead Source'] = 'Tienda Online';
 		$zoho->addContact($contactData, !empty($updateContacts));
-	}
+	}//
 	
 	if (get_option('pp_wczc_add_leads', 0)) {
 		$updateLeads = get_option('pp_wczc_update_leads', 0);
