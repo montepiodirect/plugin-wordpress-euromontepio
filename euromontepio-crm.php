@@ -231,7 +231,7 @@ function enviar_usuario_a_zoho($user_id) {
 }
 
 function convertir_lead_a_contacto($user_id) {
-			$usuario = get_userdata( $user_id );
+	$usuario = get_userdata( $user_id );
 	$email = $usuario->user_email;
 	if (get_option('em_lac_zc') == 1){
 	if (!class_exists('PP_Zoho_API'))
@@ -239,9 +239,9 @@ function convertir_lead_a_contacto($user_id) {
 	$zohoApiToken = get_option('pp_wczc_zoho_api_token');
 	$zoho = new PP_Zoho_API($zohoApiToken);
 	$hayid = buscar_lead_id($email);
-	if($hayid != null){
-		$zoho->convertLead($hayid);
-	}
+	//if($hayid != null){
+	//	$zoho->convertLead($hayid);
+//	}
 	}
 }
 
