@@ -231,7 +231,6 @@ function enviar_usuario_a_zoho($user_id) {
 }
 
 function convertir_lead_a_contacto($user_id) {
-			die('fallo');
 			$usuario = get_userdata( $user_id );
 	$email = $usuario->user_email;
 	if (get_option('em_lac_zc') == 1){
